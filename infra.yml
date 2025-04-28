@@ -1,0 +1,13 @@
+Type: AWS::Kinesis::Stream
+Properties:
+  DesiredShardLevelMetrics: 
+    - String
+  Name: String
+  RetentionPeriodHours: Integer
+  ShardCount: Integer
+  StreamEncryption: 
+    StreamEncryption
+  StreamModeDetails: 
+    StreamModeDetails
+  Tags: 
+    - Tag
