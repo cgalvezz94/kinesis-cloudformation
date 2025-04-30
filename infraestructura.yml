@@ -25,7 +25,7 @@ Parameters:
     Description: 'The metrics option for the Kinesis stream.'
   Project:
     Type: String
-    Default: 'kinesis-stream'
+    Default: 'kinesis-project'
     Description: 'The project name.'
 Resources:
   MyKinesisStream:
