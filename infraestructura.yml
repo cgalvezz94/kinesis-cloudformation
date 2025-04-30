@@ -1,13 +1,45 @@
-Type: AWS::Kinesis::Stream
-Properties:
-  DesiredShardLevelMetrics: 
-    - String
-  Name: String
-  RetentionPeriodHours: Integer
-  ShardCount: Integer
-  StreamEncryption: 
-    StreamEncryption
-  StreamModeDetails: 
-    StreamModeDetails
-  Tags: 
-    - Tag
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'AWS CloudFormation template for Kinesis Stream'
+Parameters:
+  StreamName:
+    Type: String
+    Default: 'kinesis-stream'
+    Description: 'The name of the Kinesis stream.'
+  StreamMode:
+    Type: String
+    Default: 'ON_DEMAND'
+    AllowedValues:
+      - PROVISIONED
+      - ON_DEMAND
+    Description: 'The mode of the Kinesis stream.'
+  RetentionPeriodHours:
+    Type: Number
+    Default: 24
+    Description: 'The retention period for the Kinesis stream in hours.'
+  MetricsOption:
+    Type: String
+    Default: 'ALL'
+    AllowedValues:
+      - ALL
+      - NONE
+    Description: 'The metrics option for the Kinesis stream.'
+  Project:
+    Type: String
+    Default: 'kinesis-stream'
+    Description: 'The project name.'
+Resources:
+  MyKinesisStream:
+    Type: AWS::Kinesis::Stream
+    Properties:
+      DesiredShardLevelMetrics: 
+        - !Ref MetricsOption
+      Name: !Ref StreamName
+      RetentionPeriodHours: !Ref RetentionPeriodHours
+      StreamEncryption: 
+        EncryptionType: NONE
+      StreamModeDetails: 
+        StreamMode: !Ref StreamMode
+      Tags:
+        - Key: project
+        - Value: !Ref Project
+        
