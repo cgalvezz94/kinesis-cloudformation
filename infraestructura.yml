@@ -35,8 +35,6 @@ Resources:
         - !Ref MetricsOption
       Name: !Ref StreamName
       RetentionPeriodHours: !Ref RetentionPeriodHours
-      StreamEncryption: 
-        EncryptionType: NONE
       StreamModeDetails: 
         StreamMode: !Ref StreamMode
       Tags:
