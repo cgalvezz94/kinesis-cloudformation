@@ -1,6 +1,10 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: 'AWS CloudFormation template for Kinesis Stream'
 Parameters:
+  RoleName:
+    Type: String
+    Default: 'kinesis-stream-role'
+    Description: 'The name of the IAM role for Kinesis stream.'
   StreamName:
     Type: String
     Default: 'kinesis-stream'
@@ -28,6 +32,28 @@ Parameters:
     Default: 'kinesis-project'
     Description: 'The project name.'
 Resources:
+  MyKinesisStreamRole: 
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Ref RoleName
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: kinesis.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: KinesisStreamPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "kinesis: PutRecord"
+                  - "kinesis: GetRecords"
+                  - "kinesis: DescribeStream"
+                Resource: !GetAtt MyKinesisStream.Arn
   MyKinesisStream:
     Type: AWS::Kinesis::Stream
     Properties:
@@ -39,5 +65,5 @@ Resources:
         StreamMode: !Ref StreamMode
       Tags:
         - Key: project
-        - Value: !Ref Project
+          Value: !Ref Project
         
