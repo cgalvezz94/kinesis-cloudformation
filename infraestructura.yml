@@ -3,7 +3,7 @@ Description: 'AWS CloudFormation template for Kinesis Stream'
 Parameters:
   RoleName:
     Type: String
-    Default: 'kinesis-stream-role'
+    Default: 'kinesis-role'
     Description: 'The name of the IAM role for Kinesis stream.'
   StreamName:
     Type: String
