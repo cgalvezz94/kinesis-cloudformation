@@ -53,6 +53,10 @@ Resources:
                   - "kinesis: PutRecord"
                   - "kinesis: GetRecords"
                   - "kinesis: DescribeStream"
+                  - "kinesis: ListStreams"
+                  - "kinesis: GetShardIterator"
+                  - "kinesis: DescribeStreamSummary"
+                  - "kinesis: CreateStream"
                 Resource: !GetAtt MyKinesisStream.Arn
   MyKinesisStream:
     Type: AWS::Kinesis::Stream
