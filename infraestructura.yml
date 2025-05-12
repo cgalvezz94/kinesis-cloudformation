@@ -68,4 +68,5 @@ Resources:
       Tags:
         - Key: project
           Value: !Ref Project
+      RoleARN: !GetAtt MyKinesisStreamRole.Arn
         
