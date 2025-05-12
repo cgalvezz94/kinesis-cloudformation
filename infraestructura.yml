@@ -50,14 +50,12 @@ Resources:
             Statement:
               - Effect: Allow
                 Action:
-                  - "kinesis: PutRecord"
-                  - "kinesis: GetRecords"
-                  - "kinesis: DescribeStream"
-                  - "kinesis: ListStreams"
-                  - "kinesis: GetShardIterator"
-                  - "kinesis: DescribeStreamSummary"
-                  - "kinesis: CreateStream"
+                  - "kinesis: *"
                 Resource: !GetAtt MyKinesisStream.Arn
+              - Effect: Allow
+                Action:
+                  - "sts:AssumeRole"
+                Resource: "*"
   MyKinesisStream:
     Type: AWS::Kinesis::Stream
     Properties:
