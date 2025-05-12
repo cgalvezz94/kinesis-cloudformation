@@ -51,7 +51,7 @@ Resources:
               - Effect: Allow
                 Action:
                   - "kinesis: *"
-                Resource: !GetAtt MyKinesisStream.Arn
+                Resource: "*"
               - Effect: Allow
                 Action:
                   - "sts:AssumeRole"
