@@ -27,10 +27,6 @@ Parameters:
     Type: String
     Default: 'kinesis-project'
     Description: 'The project name.'
-  KinesisRole:
-    Type: String
-    Default: 'arn:aws:iam::302263066270:role/kinesis-role'
-    Description: 'The ARN of the IAM role for Kinesis stream access.'
 Resources:
   MyKinesisStream:
     Type: AWS::Kinesis::Stream
@@ -44,5 +40,4 @@ Resources:
       Tags:
         - Key: project
           Value: !Ref Project
-      RoleARN: !Ref KinesisRole
         
