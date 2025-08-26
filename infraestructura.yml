@@ -30,6 +30,13 @@ Parameters:
 
 
 Resources:
+  LambdaS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: mi-bucket-lambdas
+      VersioningConfiguration:
+        Status: Enabled
+
   ### 🔹 Kinesis Stream
   DataStream:
     Type: AWS::Kinesis::Stream
@@ -82,7 +89,7 @@ Resources:
       Handler: app.lambda_handlers.stream_processor.lambda_handler
       Role: !GetAtt LambdaExecutionRole.Arn
       Code:
-        S3Bucket: mi-bucket-lambdas
+        S3Bucket: !Ref LambdaS3Bucket
         S3Key: function.zip 
 
   ### 🔹 Event Source Mapping (Kinesis → Lambda)
@@ -93,4 +100,3 @@ Resources:
       FunctionName: !Ref StreamProcessorLambda
       StartingPosition: LATEST
 
-        
