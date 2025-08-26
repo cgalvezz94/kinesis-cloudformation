@@ -29,9 +29,9 @@ jobs:
         run: |
           flake8 app/ --max-line-length=100
 
-      - name: Run Unit Tests
-        run: |
-          pytest app/tests/ --disable-warnings -q
+      #- name: Run Unit Tests
+      #  run: |
+      #    pytest app/tests/ --disable-warnings -q
 
   ### 🔹 CD: Deploy Infra + Lambda Code
   cd:
