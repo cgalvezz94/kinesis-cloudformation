@@ -79,14 +79,11 @@ Resources:
     Properties:
       FunctionName: StreamProcessor
       Runtime: python3.9
-      Handler: lambda_function.lambda_handler
+      Handler: app.lambda_handlers.stream_processor.lambda_handler
       Role: !GetAtt LambdaExecutionRole.Arn
       Code:
-        ZipFile: |
-          import json
-          def lambda_handler(event, context):
-              print("Event:", json.dumps(event))
-              return {"status": "ok"}
+        S3Bucket: mi-bucket-lambdas
+        S3Key: function.zip 
 
   ### 🔹 Event Source Mapping (Kinesis → Lambda)
   LambdaEventSourceMapping:
