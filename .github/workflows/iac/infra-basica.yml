@@ -1,0 +1,30 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Infraestructura base para streaming con Kinesis + Lambda + Timestream'
+Parameters:
+  BucketName:
+    Type: String
+    Default: 'mi-bucket-lambdas'
+    Description: 'The name of the S3 bucket'
+
+Resources:
+  LambdaS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref BucketName
+
+  ### 🔹 IAM Role para Lambda
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: LambdaKinesisTimestreamRole
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaKinesisExecutionRole
+        - arn:aws:iam::aws:policy/AmazonTimestreamFullAccess
+        - arn:aws:iam::aws:policy/CloudWatchLogsFullAccess
