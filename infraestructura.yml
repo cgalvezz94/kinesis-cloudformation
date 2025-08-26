@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'AWS CloudFormation template for Kinesis Stream'
+Description: 'Infraestructura base para streaming con Kinesis + Lambda + Timestream'
 Parameters:
   StreamName:
     Type: String
@@ -27,17 +27,73 @@ Parameters:
     Type: String
     Default: 'kinesis-project'
     Description: 'The project name.'
+
+
 Resources:
-  MyKinesisStream:
+  ### 🔹 Kinesis Stream
+  DataStream:
     Type: AWS::Kinesis::Stream
     Properties:
-      DesiredShardLevelMetrics: 
-        - !Ref MetricsOption
       Name: !Ref StreamName
+      ShardCount: 1
       RetentionPeriodHours: !Ref RetentionPeriodHours
-      StreamModeDetails: 
+      StreamModeDetails:
         StreamMode: !Ref StreamMode
-      Tags:
-        - Key: project
-          Value: !Ref Project
+
+  ### 🔹 Timestream Database
+  TimestreamDatabase:
+    Type: AWS::Timestream::Database
+    Properties:
+      DatabaseName: RealTimeDB
+
+  ### 🔹 Timestream Table
+  TimestreamTable:
+    Type: AWS::Timestream::Table
+    Properties:
+      DatabaseName: !Ref TimestreamDatabase
+      TableName: MetricsTable
+      RetentionProperties:
+        MemoryStoreRetentionPeriodInHours: 24
+        MagneticStoreRetentionPeriodInDays: 7
+
+  ### 🔹 IAM Role para Lambda
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: LambdaKinesisTimestreamRole
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaKinesisExecutionRole
+        - arn:aws:iam::aws:policy/AmazonTimestreamFullAccess
+        - arn:aws:iam::aws:policy/CloudWatchLogsFullAccess
+
+  ### 🔹 Lambda Function (placeholder)
+  StreamProcessorLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: StreamProcessor
+      Runtime: python3.9
+      Handler: lambda_function.lambda_handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Code:
+        ZipFile: |
+          import json
+          def lambda_handler(event, context):
+              print("Event:", json.dumps(event))
+              return {"status": "ok"}
+
+  ### 🔹 Event Source Mapping (Kinesis → Lambda)
+  LambdaEventSourceMapping:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      EventSourceArn: !GetAtt DataStream.Arn
+      FunctionName: !Ref StreamProcessorLambda
+      StartingPosition: LATEST
+
         
