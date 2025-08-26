@@ -54,11 +54,11 @@ jobs:
 
       - name: Validate CloudFormation 1
         run: |
-          aws cloudformation validate-template --template-body file://iac/infra-basica.yml
+          aws cloudformation validate-template --template-file iac/infra-basica.yml
 
       - name: Validate CloudFormation 2
         run: |
-          aws cloudformation validate-template --template-body file://iac/infra-secundaria.yml
+          aws cloudformation validate-template --template-file iac/infra-secundaria.yml
 
       - name: Deploy CloudFormation Stack 1
         run: |
