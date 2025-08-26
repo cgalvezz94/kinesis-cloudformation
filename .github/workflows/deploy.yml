@@ -52,9 +52,20 @@ jobs:
           role-to-assume: arn:aws:iam::302263066270:role/streaming-data-crypto
           aws-region: us-east-1  
 
-      - name: Validate CloudFormation
+      - name: Validate CloudFormation 1
         run: |
-          aws cloudformation validate-template --template-body file://infraestructura.yml
+          aws cloudformation validate-template --template-body file://iac/infra-basica.yml
+
+      - name: Validate CloudFormation 2
+        run: |
+          aws cloudformation validate-template --template-body file://iac/infra-secundaria.yml
+
+      - name: Deploy CloudFormation Stack 1
+        run: |
+          aws cloudformation deploy \
+            --template-file iac/infra-basica.yml \
+            --stack-name basic-infra \
+            --capabilities CAPABILITY_NAMED_IAM
 
       - name: Package Lambda Code
         run: |
@@ -67,7 +78,6 @@ jobs:
       - name: Deploy CloudFormation stack
         run: |
           aws cloudformation deploy \
-            --template-file infraestructura.yml \
+            --template-file iac/infra-secundaria.yml \
             --stack-name real-time-stack \
-            --capabilities CAPABILITY_NAMED_IAM \
             --parameter-overrides LambdaCodeS3Bucket=mi-bucket-lambdas LambdaCodeS3Key=function.zip
