@@ -10,7 +10,7 @@ Resources:
   LambdaS3Bucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Ref BucketName
+      BucketName: !Sub "mi-bucket-lambdas-${AWS::AccountId}"
 
   ### 🔹 IAM Role para Lambda
   LambdaExecutionRole:
