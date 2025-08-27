@@ -62,6 +62,18 @@ jobs:
         run: |
           aws cloudformation validate-template --template-body "$(cat iac/infra-secundaria.yml)"
 
+      - name: Handle basic-infra ROLLBACK_COMPLETE
+        run: |
+          STACK_NAME=basic-infra
+          STATUS=$(aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stack[0].StackStatus" --output text 2>/dev/null || echo "NOT_FOUND")
+          echo "Estado actual del stack: $STATUS"
+          if [ "$STATUS" == "ROLLBACK_COMPLETE" ]; then
+            echo "Eliminando stack $STACK_NAME en estado ROLLBACK_COMPLETE..."
+            aws cloudformation delete-stack --stack-name $STACK_NAME
+            aws cloudformation wait stack-delete-complete --stack-name $STACK_NAME
+          fi
+
+
       - name: Deploy CloudFormation Stack 1
         run: |
           aws cloudformation deploy \
@@ -77,6 +89,17 @@ jobs:
         run: |
           aws s3 cp function.zip s3://mi-bucket-lambdas/function.zip
 
+      - name: Handle real-time-stack ROLLBACK_COMPLETE
+        run: |
+          STACK_NAME=real-time-stack
+          STATUS=$(aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[0].StackStatus" --output text 2>/dev/null || echo "NOT_FOUND")
+          echo "Estado actual del stack: $STATUS"
+          if [ "$STATUS" == "ROLLBACK_COMPLETE" ]; then
+            echo "Eliminando stack $STACK_NAME en estado ROLLBACK_COMPLETE..."
+            aws cloudformation delete-stack --stack-name $STACK_NAME
+            aws cloudformation wait stack-delete-complete --stack-name $STACK_NAME
+          fi
+      
       - name: Deploy CloudFormation stack
         run: |
           aws cloudformation deploy \
