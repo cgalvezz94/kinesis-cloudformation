@@ -67,7 +67,7 @@ Resources:
       Handler: app.lambda_handlers.stream_processor.lambda_handler
       Role: !ImportValue LambdaExecutionRoleArn
       Code:
-        S3Bucket: !Ref LambdaS3Bucket
+        S3Bucket: !ImportValue LambdaS3BucketName
         S3Key: function.zip 
 
   ### 🔹 Event Source Mapping (Kinesis → Lambda)

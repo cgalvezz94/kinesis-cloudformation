@@ -35,3 +35,8 @@ Outputs:
     Value: !GetAtt LambdaExecutionRole.Arn
     Export:
       Name: LambdaExecutionRoleArn
+  
+  LambdaS3BucketExport:
+    Value: !Ref LambdaS3Bucket
+    Export:
+      Name: LambdaS3BucketName
