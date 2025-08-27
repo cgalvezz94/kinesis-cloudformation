@@ -88,7 +88,7 @@ jobs:
           aws cloudformation deploy \
             --template-file iac/infra-basica.yml \
             --stack-name basic-infra \
-            --capabilities CAPABILITY_NAMED_IAM
+            --capabilities CAPABILITY_NAMED_IAM \
             --parameter-overrides BucketName=$BUCKET_NAME
 
       - name: Wait for S3 bucket to exist
