@@ -51,6 +51,13 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::302263066270:role/streaming-data-crypto
           aws-region: us-east-1
+
+      - name: Set dynamic bucket name
+        id: bucket
+        run: |
+          ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+          echo "BUCKET_NAME=mi-bucket-lambdas-$ACCOUNT_ID" >> $GITHUB_ENV
+
       - name: List repo files
         run: ls -R
 
@@ -82,6 +89,12 @@ jobs:
             --template-file iac/infra-basica.yml \
             --stack-name basic-infra \
             --capabilities CAPABILITY_NAMED_IAM
+            --parameter-overrides BucketName=$BUCKET_NAME
+
+      - name: Wait for S3 bucket to exist
+        run: |
+          echo "Esperando a que el bucket $BUCKET_NAME exista..."
+          aws s3api wait bucket-exists --bucket $BUCKET_NAME
 
       - name: Package Lambda Code
         run: |
@@ -89,7 +102,7 @@ jobs:
 
       - name: Upload Lambda Package to S3
         run: |
-          aws s3 cp function.zip s3://mi-bucket-lambdas/function.zip
+          aws s3 cp function.zip s3://$BUCKET_NAME/function.zip
 
       - name: Handle real-time-stack ROLLBACK_COMPLETE
         run: |
@@ -109,4 +122,4 @@ jobs:
           aws cloudformation deploy \
             --template-file iac/infra-secundaria.yml \
             --stack-name real-time-stack \
-            --parameter-overrides LambdaCodeS3Bucket=mi-bucket-lambdas LambdaCodeS3Key=function.zip
+            --parameter-overrides LambdaCodeS3Bucket=$BUCKET_NAME LambdaCodeS3Key=function.zip
