@@ -28,3 +28,10 @@ Resources:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaKinesisExecutionRole
         - arn:aws:iam::aws:policy/AmazonTimestreamFullAccess
         - arn:aws:iam::aws:policy/CloudWatchLogsFullAccess
+
+Outputs:
+  LambdaExecutionRoleArn:
+    Description: ARN del role de Lambda
+    Value: !GetAtt LambdaExecutionRole.Arn
+    Export:
+      Name: LambdaExecutionRoleArn
