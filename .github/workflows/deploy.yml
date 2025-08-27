@@ -50,7 +50,9 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v2
         with:
           role-to-assume: arn:aws:iam::302263066270:role/streaming-data-crypto
-          aws-region: us-east-1  
+          aws-region: us-east-1
+      - name: List repo files
+        run: ls -R
 
       - name: Validate CloudFormation 1
         run: |
