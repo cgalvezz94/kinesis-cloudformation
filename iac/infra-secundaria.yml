@@ -7,7 +7,7 @@ Parameters:
     Description: 'The name of the Kinesis stream.'
   StreamMode:
     Type: String
-    Default: 'ON_DEMAND'
+    Default: 'PROVISIONED'
     AllowedValues:
       - PROVISIONED
       - ON_DEMAND
