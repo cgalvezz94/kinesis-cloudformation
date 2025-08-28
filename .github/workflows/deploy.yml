@@ -117,9 +117,9 @@ jobs:
             echo "Stack eliminado"
           fi
       
-      - name: Deploy CloudFormation stack
-        run: |
-          aws cloudformation deploy \
-            --template-file iac/infra-secundaria.yml \
-            --stack-name real-time-stack \
-            --parameter-overrides LambdaCodeS3Bucket=$BUCKET_NAME LambdaCodeS3Key=function.zip
+      #- name: Deploy CloudFormation stack
+      #  run: |
+      #    aws cloudformation deploy \
+      #      --template-file iac/infra-secundaria.yml \
+      #      --stack-name real-time-stack \
+      #      --parameter-overrides LambdaCodeS3Bucket=$BUCKET_NAME LambdaCodeS3Key=function.zip

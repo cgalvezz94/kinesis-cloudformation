@@ -67,6 +67,7 @@ my-project/
 ├──.github/ # Github Actions
 │ ├── workflows/
 │ │  ├── deploy.yml
+├── scripts/ 
 ├── app/ # Source code 
 │ ├── delivery/
 │ ├── lambda_handlers/
@@ -76,6 +77,7 @@ my-project/
 │ ├── producers/
 │ ├── services/
 │ ├── sources/
+│ ├── observability/
 │ ├── utils/ 
 │ └── main.py
 ├── config/
