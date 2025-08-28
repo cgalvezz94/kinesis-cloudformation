@@ -32,10 +32,12 @@ async def connect():
                 logger.error(f"Error inesperado: {e}")
                 continue
 
+
 def handle_event(event):
     # Simulación: guardar en buffer e imprimir
     event_buffer.append(event)
     print(json.dumps(event, indent=2))
+
 
 def run():
     try:
@@ -45,3 +47,4 @@ def run():
 
 if __name__ == "__main__":
     run()
+    
