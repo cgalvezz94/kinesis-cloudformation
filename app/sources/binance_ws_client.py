@@ -16,6 +16,7 @@ BINANCE_WS_URL = "wss://stream.binance.com:9443/ws/btcusdt@trade"
 # Buffer local para eventos
 event_buffer = []
 
+
 @retry(stop=stop_after_attempt(5), wait=wait_exponential(multiplier=1, min=2, max=10))
 async def connect():
     async with websockets.connect(BINANCE_WS_URL, ping_interval=20, ping_timeout=10) as ws:
@@ -45,6 +46,6 @@ def run():
     except Exception as e:
         logger.error(f"Fallo al conectar: {e}")
 
+
 if __name__ == "__main__":
     run()
-    
