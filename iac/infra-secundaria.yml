@@ -3,7 +3,7 @@ Description: 'Infraestructura base para streaming con Kinesis + Lambda + Timestr
 Parameters:
   StreamName:
     Type: String
-    Default: 'kinesis-stream'
+    Default: 'binance-trades'
     Description: 'The name of the Kinesis stream.'
   StreamMode:
     Type: String
