@@ -20,4 +20,3 @@ def publish_event(event, stream_name=BINANCE_STREAM_NAME, partition_key=PARTITIO
     except Exception as e:
         logger.error(f"Error al publicar en Kinesis: {e}")
 
-
