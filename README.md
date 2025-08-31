@@ -75,10 +75,14 @@ my-project/
 │ ├── models/
 │ ├── processing/
 │ ├── producers/
+│ │  ├── kinesis_publiser.py
+│ ├── schemas/
+│ │  ├── binance_trade_schema.py
 │ ├── services/
 │ ├── sources/
 │ ├── observability/
-│ ├── utils/ 
+│ ├── utils/
+│ │  ├── schema_validator.py 
 │ └── main.py
 ├── config/
 │ ├── __init__.py
