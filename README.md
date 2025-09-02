@@ -128,11 +128,35 @@ xxx
 
 ---
 
-## 📌 Available Endpoint
+## 📌 Payload
 
-1. xxx
+```text
+{
+  "e": "trade",
+  "E": 1756827687988,
+  "s": "BTCUSDT",
+  "t": 5210041330,
+  "p": "111018.01000000",
+  "q": "0.00005000",
+  "T": 1756827687987,
+  "m": false,
+  "M": true
+}
+```
 
-2. xxx
+```text
+| Key   | Meaning                                      | Type     | Example             |
+|-------|----------------------------------------------|----------|---------------------|
+| e     | Event type                                   | string   | "trade"             |
+| E     | Event timestamp (ms)                         | int      | 1756827688115       |
+| s     | Trading pair symbol                          | string   | "BTCUSDT"           |
+| t     | Unique trade ID                              | int      | 5210041384          |
+| p     | Price at which the trade was executed        | string   | "111022.09000000"   |
+| q     | Quantity traded                              | string   | "0.00005000"        |
+| T     | Trade timestamp (ms)                         | int      | 1756827688115       |
+| m     | Was the seller the maker?                    | bool     | false               |
+| M     | Reserved flag (always true)                  | bool     | true                |
+```
 
 ---
 
