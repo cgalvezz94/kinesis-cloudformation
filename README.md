@@ -70,19 +70,24 @@ my-project/
 ├── scripts/ 
 ├── app/ # Source code 
 │ ├── delivery/
+│ │  ├── binance_event_handler.py
 │ ├── lambda_handlers/
 │ │  ├── stream_processor.py
 │ ├── models/
 │ ├── processing/
+│ │  ├── duration_filter_tester.py
+│ │  ├── uptime_filter_tester.py
 │ ├── producers/
 │ │  ├── kinesis_publiser.py
 │ ├── schemas/
 │ │  ├── binance_trade_schema.py
 │ ├── services/
 │ ├── sources/
+│ │  ├── binance_ws_client.py
 │ ├── observability/
 │ ├── utils/
-│ │  ├── schema_validator.py 
+│ │  ├── schema_validator.py
+│ │  ├── websocket_payload_parser.py 
 │ └── main.py
 ├── config/
 │ ├── __init__.py
@@ -92,7 +97,9 @@ my-project/
 | ├── infra-basica.yml
 | ├── infra-secundaria.yml
 ├── tests/ # Automated test files
-│   └── __init__.py  
+│   └── __init__.py
+│   ├── test_kinesis_publisher.py
+│   ├── test_websocket_payload_parser.py 
 ├──README.md # This file 
 └──requirements.txt # Python dependencies
 ```
