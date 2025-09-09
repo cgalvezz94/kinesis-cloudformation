@@ -7,6 +7,7 @@ Parameters:
     Description: 'The name of the S3 bucket'
 
 Resources:
+  ### 🔹 S3 Bucket para la lambda
   LambdaS3Bucket:
     Type: AWS::S3::Bucket
     Properties:
@@ -28,6 +29,26 @@ Resources:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaKinesisExecutionRole
         - arn:aws:iam::aws:policy/AmazonTimestreamFullAccess
         - arn:aws:iam::aws:policy/CloudWatchLogsFullAccess
+  
+  ### 🔹 IAM Role para Lambda
+  GrafanaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: GrafanaRole
+      AssumeRolePolicyDocument:
+        Version: "2012-10-27"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: grafana.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AWSGrafanaAccountAdministrator
+        - arn:aws:iam::aws:policy/CloudWatchLogsFullAccess
+        - arn:aws:iam::aws:policy/AWSXrayFullAccess
+        - arn:aws:iam::aws:policy/AmazonSNSFullAccess
+        - arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess
+
 
 Outputs:
   LambdaExecutionRoleArn:
@@ -40,3 +61,10 @@ Outputs:
     Value: !Ref LambdaS3Bucket
     Export:
       Name: LambdaS3BucketName
+
+  GrafanaRoleArn:
+    Description: ARN del role de Grafana
+    Value: !GetAtt GrafanaRole.Arn
+    Export:
+      Name: GrafanaRoleArn
+  

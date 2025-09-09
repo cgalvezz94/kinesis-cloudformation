@@ -91,4 +91,4 @@ Resources:
         - AWS_SSO
       PermissionType: SERVICE_MANAGED
       Name: !Sub "${Project}-grafana"
-      RoleArn: !ImportValue GrafanaServiceRoleArn
+      Role: !ImportValue GrafanaRoleArn
