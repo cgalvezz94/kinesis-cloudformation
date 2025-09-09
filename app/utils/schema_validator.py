@@ -1,7 +1,6 @@
 import json
 import logging
-from schemas.binance_trade_schema import BINANCE_TRADE_SCHEMA
-from utils.schema_validator import validate_event
+from app.schemas.binance_trade_schema import BINANCE_TRADE_SCHEMA
 
 # Configuración del logger
 logger = logging.getLogger("BinanceWS")
@@ -13,15 +12,17 @@ if not logger.handlers:
     console_handler.setFormatter(formatter)
     logger.addHandler(console_handler)
 
-
-def handle_event(event):
+def validate_event(event: dict, schema: dict = BINANCE_TRADE_SCHEMA) -> bool:
     """
-    Procesa un evento recibido desde Binance WebSocket.
-    Valida el esquema antes de imprimir o publicar.
+    Valida que el evento cumpla con el esquema esperado.
+    Verifica que todas las claves requeridas estén presentes.
     """
-    if validate_event(event, BINANCE_TRADE_SCHEMA):
-        logger.info("Evento válido recibido")
-        print(json.dumps(event, indent=2))
-        # Aquí podrías publicar a Kinesis o persistir en DynamoDB
-    else:
-        logger.warning("Evento descartado por esquema inválido")
+    try:
+        required_keys = schema.get("required", [])
+        if not all(k in event for k in required_keys):
+            logger.warning(f"Evento inválido: faltan claves requeridas. Recibido: {json.dumps(event)}")
+            return False
+        return True
+    except Exception as e:
+        logger.error(f"Error en validación de esquema: {e}")
+        return False

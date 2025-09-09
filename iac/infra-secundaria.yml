@@ -7,7 +7,7 @@ Parameters:
     Description: 'The name of the Kinesis stream.'
   StreamMode:
     Type: String
-    Default: 'PROVISIONED'
+    Default: 'ON_DEMAND'
     AllowedValues:
       - PROVISIONED
       - ON_DEMAND
@@ -36,26 +36,10 @@ Resources:
     Type: AWS::Kinesis::Stream
     Properties:
       Name: !Ref StreamName
-      ShardCount: 1
       RetentionPeriodHours: !Ref RetentionPeriodHours
       StreamModeDetails:
         StreamMode: !Ref StreamMode
 
-  ### 🔹 Timestream Database
-  TimestreamDatabase:
-    Type: AWS::Timestream::Database
-    Properties:
-      DatabaseName: RealTimeDB
-
-  ### 🔹 Timestream Table
-  TimestreamTable:
-    Type: AWS::Timestream::Table
-    Properties:
-      DatabaseName: !Ref TimestreamDatabase
-      TableName: MetricsTable
-      RetentionProperties:
-        MemoryStoreRetentionPeriodInHours: 24
-        MagneticStoreRetentionPeriodInDays: 7
 
 
   ### 🔹 Lambda Function (placeholder)
@@ -64,7 +48,7 @@ Resources:
     Properties:
       FunctionName: StreamProcessor
       Runtime: python3.9
-      Handler: app.lambda_handlers.stream_processor.lambda_handler
+      Handler: app.lambda_handlers.kinesis_to_dynamo.lambda_handler
       Role: !ImportValue LambdaExecutionRoleArn
       Code:
         S3Bucket: !ImportValue LambdaS3BucketName
@@ -77,3 +61,34 @@ Resources:
       EventSourceArn: !GetAtt DataStream.Arn
       FunctionName: !Ref StreamProcessorLambda
       StartingPosition: LATEST
+
+  ### 🔹 DynamoDB Table
+  BinanceTradesTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: BinanceTrades
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: tradeId
+          AttributeType: N
+        - AttributeName: pair
+          AttributeType: S
+      KeySchema:
+        - AttributeName: tradeId
+          KeyType: HASH
+        - AttributeName: pair
+          KeyType: RANGE
+      Tags:
+        - Key: Project
+          Value: !Ref Project
+  
+  ### 🔹 Grafana Workspace
+  ManagedGrafanaWorkspace:
+    Type: AWS::Grafana::Workspace
+    Properties:
+      AccountAccessType: CURRENT_ACCOUNT
+      AuthenticationProviders:
+        - AWS_SSO
+      PermissionType: SERVICE_MANAGED
+      Name: !Sub "${Project}-grafana"
+      RoleArn: !ImportValue GrafanaServiceRoleArn
