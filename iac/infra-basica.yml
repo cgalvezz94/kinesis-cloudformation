@@ -30,13 +30,13 @@ Resources:
         - arn:aws:iam::aws:policy/AmazonTimestreamFullAccess
         - arn:aws:iam::aws:policy/CloudWatchLogsFullAccess
   
-  ### 🔹 IAM Role para Lambda
+  ### 🔹 IAM Role para Grafana
   GrafanaRole:
     Type: AWS::IAM::Role
     Properties:
       RoleName: GrafanaRole
       AssumeRolePolicyDocument:
-        Version: "2012-10-27"
+        Version: "2012-10-17"
         Statement:
           - Effect: Allow
             Principal:
