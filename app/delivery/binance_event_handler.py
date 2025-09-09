@@ -43,5 +43,3 @@ def handle_event(event: dict):
 
     # Actualizar estado
     _last_event = event
-
-
