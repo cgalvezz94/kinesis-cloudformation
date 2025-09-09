@@ -2,20 +2,23 @@
 
 import asyncio
 import websockets
-import json
 import logging
 from tenacity import retry, stop_after_attempt, wait_exponential
+from app.utils.websocket_payload_parser import parse_valid_events
+from app.delivery.binance_event_handler import handle_event  # o donde tengas tu handler
 
 # Configuración de logging
 logger = logging.getLogger("BinanceWS")
 logger.setLevel(logging.INFO)
 
+if not logger.handlers:
+    handler = logging.StreamHandler()
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+
 # URL del WebSocket de Binance
 BINANCE_WS_URL = "wss://stream.binance.com:9443/ws/btcusdt@trade"
-
-# Buffer local para eventos
-event_buffer = []
-
 
 @retry(stop=stop_after_attempt(5), wait=wait_exponential(multiplier=1, min=2, max=10))
 async def connect():
@@ -23,9 +26,11 @@ async def connect():
         logger.info("Conectado al WebSocket de Binance")
         while True:
             try:
-                message = await ws.recv()
-                data = json.loads(message)
-                handle_event(data)
+                raw_message = await ws.recv()
+                valid_events = parse_valid_events(raw_message)
+                for event in valid_events:
+                    logger.info(f"Evento recibido: {event}")
+                    handle_event(event)
             except websockets.ConnectionClosed:
                 logger.warning("Conexión cerrada. Reintentando...")
                 raise
@@ -34,18 +39,14 @@ async def connect():
                 continue
 
 
-def handle_event(event):
-    # Simulación: guardar en buffer e imprimir
-    event_buffer.append(event)
-    print(json.dumps(event, indent=2))
-
-
 def run():
     try:
         asyncio.run(connect())
+    except KeyboardInterrupt:
+        print("🛑 Interrupción por teclado. Cerrando conexión...")
     except Exception as e:
         logger.error(f"Fallo al conectar: {e}")
 
-
 if __name__ == "__main__":
     run()
+
