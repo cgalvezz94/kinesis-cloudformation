@@ -17,7 +17,6 @@ def is_duration_valid(prev_event: dict, current_event: dict, min_ms: int = 1) ->
     try:
         duration = current_event["T"] - prev_event["T"]
         trade_id = current_event.get("t", "unknown")
-        
         if duration >= min_ms:
             return True
         else:
@@ -28,4 +27,3 @@ def is_duration_valid(prev_event: dict, current_event: dict, min_ms: int = 1) ->
     except KeyError as e:
         logger.error(f"Falta campo en evento para calcular duracion: {e}")
         return False
-

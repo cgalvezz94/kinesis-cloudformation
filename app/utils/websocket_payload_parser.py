@@ -32,7 +32,6 @@ def extract_payloads(raw_message: str) -> list:
     return payloads
 
 
-
 def parse_valid_events(raw_message: str) -> list:
     """
     Extracts and validates events from a raw WebSocket message.
