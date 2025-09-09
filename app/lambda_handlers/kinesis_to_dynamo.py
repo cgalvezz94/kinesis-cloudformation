@@ -1,5 +1,7 @@
-#app/lambda_handlers/kinesis_to_dynamo.py
-import json, base64, boto3
+# app/lambda_handlers/kinesis_to_dynamo.py
+import json
+import base64
+import boto3
 
 dynamodb = boto3.client('dynamodb')
 

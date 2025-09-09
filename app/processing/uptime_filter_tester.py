@@ -1,4 +1,4 @@
-#app/processing/uptime_filter_tester.py
+# app/processing/uptime_filter_tester.py
 import logging
 
 logger = logging.getLogger("UptimeFilter")
@@ -23,7 +23,10 @@ def is_continuous(prev_event: dict, current_event: dict) -> bool:
         if current_id == expected:
             return True
         else:
-            logger.warning(f"Gap detectado [prev={prev_id}, current={current_id}] | Esperado={expected}")
+            logger.warning(
+                f"Gap detectado [prev={prev_id},"
+                f"current={current_id}] | Esperado={expected}"
+            )
             return False
 
     except KeyError as e:

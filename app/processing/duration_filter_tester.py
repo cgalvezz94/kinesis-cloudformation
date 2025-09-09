@@ -9,6 +9,7 @@ if not logger.handlers:
     handler.setFormatter(formatter)
     logger.addHandler(handler)
 
+
 def is_duration_valid(prev_event: dict, current_event: dict, min_ms: int = 1) -> bool:
     """
     Verify if duration between 2 events is greater or equall to minimun threshold
@@ -20,7 +21,11 @@ def is_duration_valid(prev_event: dict, current_event: dict, min_ms: int = 1) ->
         if duration >= min_ms:
             return True
         else:
-            logger.warning(f"Duracion invalida [tradeId={trade_id}] | ΔT={duration} ms < {min_ms} ms")
+            logger.warning(
+                f"Duracion invalida [tradeId={trade_id}] | "
+                f"ΔT={duration} ms < {min_ms} ms"
+            )
     except KeyError as e:
         logger.error(f"Falta campo en evento para calcular duracion: {e}")
         return False
+
