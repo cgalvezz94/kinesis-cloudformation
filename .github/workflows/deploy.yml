@@ -107,14 +107,19 @@ jobs:
       - name: Handle real-time-stack ROLLBACK_COMPLETE
         run: |
           STACK_NAME=real-time-stack
-          STATUS=$(aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[0].StackStatus" --output text 2>/dev/null || echo "NOT_FOUND")
+          STATUS=$(aws cloudformation describe-stacks \
+            --stack-name $STACK_NAME \
+            --query "Stacks[0].StackStatus" \
+            --output text 2>&1 || echo "NOT_FOUND")
+
           echo "Estado actual del stack: $STATUS"
-          if [ "$STATUS" == "ROLLBACK_COMPLETE" ]; then
-            echo "Eliminando stack $STACK_NAME en estado ROLLBACK_COMPLETE..."
-            aws cloudformation delete-stack --stack-name $STACK_NAME
-            echo "Esperando que el stack se elimine..."
-            aws cloudformation wait stack-delete-complete --stack-name $STACK_NAME
-            echo "Stack eliminado"
+
+          if [[ "$STATUS" == *"ROLLBACK_COMPLETE"* ]]; then
+          echo "Eliminando stack $STACK_NAME en estado ROLLBACK_COMPLETE..."
+          aws cloudformation delete-stack --stack-name $STACK_NAME
+          echo "Esperando que el stack se elimine..."
+          aws cloudformation wait stack-delete-complete --stack-name $STACK_NAME
+          echo "Stack eliminado"
           fi
       
       - name: Deploy CloudFormation stack
