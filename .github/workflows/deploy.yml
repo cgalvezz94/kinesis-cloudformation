@@ -104,19 +104,19 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r requirements.txt -t package/
-          cp app/lambda_handlers/kinesis_to_dynamo.py package/
+          cp app/lambda_handlers/kinesis_to_timestream.py package/
 
       - name: Package Lambda Code
         run: |
-          zip -r kinesis_dynamo.zip package/
+          zip -r kinesis_timestream.zip package/
 
       - name: Validate package contents
         run: |
-          unzip -l kinesis_dynamo.zip
+          unzip -l kinesis_timestream.zip
 
       - name: Upload Lambda Package to S3
         run: |
-          aws s3 cp kinesis_dynamo.zip s3://$BUCKET_NAME/kinesis_dynamo.zip
+          aws s3 cp kinesis_timestream.zip s3://$BUCKET_NAME/kinesis_timestream.zip
 
       - name: Login to Amazon ECR Public
         run: |
@@ -155,4 +155,4 @@ jobs:
           aws cloudformation deploy \
             --template-file iac/infra-secundaria.yml \
             --stack-name real-time-stack \
-            --parameter-overrides LambdaCodeS3Bucket=$BUCKET_NAME LambdaCodeS3Key=kinesis_dynamo.zip
+            --parameter-overrides LambdaCodeS3Bucket=$BUCKET_NAME LambdaCodeS3Key=kinesis_timestream.zip
