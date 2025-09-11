@@ -2,12 +2,13 @@
 import json
 import base64
 import boto3
-import time
+# import time
 
 timestream = boto3.client('timestream-write')
 
 DATABASE_NAME = 'BinanceTradesDB'
 TABLE_NAME = 'trades'
+
 
 def lambda_handler(event, context):
     for record in event['Records']:
