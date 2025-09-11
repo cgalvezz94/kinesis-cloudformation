@@ -69,7 +69,7 @@ Resources:
       DatabaseName: !Sub "${Project}-trades-db"
 
   ### 🔹 Timestream Table
-  BinanceTradesTable:
+  BinanceTradesTimestreamTable:
     Type: AWS::Timestream::Table
     Properties:
       DatabaseName: !Ref BinanceTradesDB
