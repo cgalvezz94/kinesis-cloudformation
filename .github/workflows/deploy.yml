@@ -79,8 +79,8 @@ jobs:
 
           echo "Estado actual del stack: $STATUS"
 
-          if [[ "$STATUS" == *"ROLLBACK_COMPLETE"* ]]; then
-          echo "Eliminando stack $STACK_NAME en estado ROLLBACK_COMPLETE..."
+          if [[ "$STATUS" == *"ROLLBACK_COMPLETE"* || "$STATUS" == *"ROLLBACK_FAILED"* ]]; then
+          echo "Eliminando stack $STACK_NAME en estado $STATUS ..."
           aws cloudformation delete-stack --stack-name $STACK_NAME
           echo "Esperando que el stack se elimine..."
           aws cloudformation wait stack-delete-complete --stack-name $STACK_NAME
@@ -128,8 +128,8 @@ jobs:
 
           echo "Estado actual del stack: $STATUS"
 
-          if [[ "$STATUS" == *"ROLLBACK_COMPLETE"* ]]; then
-          echo "Eliminando stack $STACK_NAME en estado ROLLBACK_COMPLETE..."
+          if [[ "$STATUS" == *"ROLLBACK_COMPLETE"* || "$STATUS" == *"ROLLBACK_FAILED"* ]]; then
+          echo "Eliminando stack $STACK_NAME en estado $STATUS ..."
           aws cloudformation delete-stack --stack-name $STACK_NAME
           echo "Esperando que el stack se elimine..."
           aws cloudformation wait stack-delete-complete --stack-name $STACK_NAME
