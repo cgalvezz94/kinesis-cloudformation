@@ -108,15 +108,15 @@ jobs:
 
       - name: Package Lambda Code
         run: |
-          zip -r kinesis_dynamo_${{ github.sha }}.zip package/
+          zip -r kinesis_dynamo.zip package/
 
       - name: Validate package contents
         run: |
-          unzip -l kinesis_dynamo_${{ github.sha }}.zip
+          unzip -l kinesis_dynamo.zip
 
       - name: Upload Lambda Package to S3
         run: |
-          aws s3 cp kinesis_dynamo_${{ github.sha }}.zip s3://$BUCKET_NAME/kinesis_dynamo_${{ github.sha }}.zip
+          aws s3 cp kinesis_dynamo.zip s3://$BUCKET_NAME/kinesis_dynamo.zip
 
       - name: Handle real-time-stack ROLLBACK_COMPLETE
         run: |
