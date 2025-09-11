@@ -63,7 +63,7 @@ The solution also includes:
 ## Project Structure
 
 ```text 
-my-project/
+app/
 ├──.github/ # Github Actions
 │ ├── workflows/
 │ │  ├── deploy.yml

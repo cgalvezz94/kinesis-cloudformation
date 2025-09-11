@@ -1,0 +1,10 @@
+.git/
+.github/
+tests/
+scripts/
+iac/
+__pycache__/
+*.pyc
+*.pyo
+*.log
+.env
