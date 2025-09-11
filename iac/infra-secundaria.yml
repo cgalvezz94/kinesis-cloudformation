@@ -62,25 +62,18 @@ Resources:
       FunctionName: !Ref StreamProcessorLambda
       StartingPosition: LATEST
 
-  ### 🔹 DynamoDB Table
-  BinanceTradesTable:
-    Type: AWS::DynamoDB::Table
+  ### 🔹 Timestream Database
+  BinanceTradesDB:
+    Type: AWS::Timestream::Database
     Properties:
-      TableName: BinanceTrades
-      BillingMode: PAY_PER_REQUEST
-      AttributeDefinitions:
-        - AttributeName: tradeId
-          AttributeType: N
-        - AttributeName: pair
-          AttributeType: S
-      KeySchema:
-        - AttributeName: tradeId
-          KeyType: HASH
-        - AttributeName: pair
-          KeyType: RANGE
-      Tags:
-        - Key: Project
-          Value: !Ref Project
+      DatabaseName: !Sub "${Project}-trades-db"
+
+  ### 🔹 Timestream Table
+  BinanceTradesTable:
+    Type: AWS::Timestream::Table
+    Properties:
+      DatabaseName: !Ref BinanceTradesDB
+      TableName: trades
   
   ### 🔹 Grafana Workspace
   ManagedGrafanaWorkspace:
