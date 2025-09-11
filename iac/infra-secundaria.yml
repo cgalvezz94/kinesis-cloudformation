@@ -48,7 +48,7 @@ Resources:
     Properties:
       FunctionName: StreamProcessor
       Runtime: python3.9
-      Handler: app.lambda_handlers.kinesis_to_dynamo.lambda_handler
+      Handler: app.lambda_handlers.kinesis_to_timestream.lambda_handler
       Role: !ImportValue LambdaExecutionRoleArn
       Code:
         S3Bucket: !ImportValue LambdaS3BucketName
