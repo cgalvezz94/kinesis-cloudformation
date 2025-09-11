@@ -1,4 +1,4 @@
-# schemas/binance_trade_schema.py
+# app/schemas/binance_trade_schema.py
 
 BINANCE_TRADE_SCHEMA = {
     "type": "object",

@@ -100,14 +100,23 @@ jobs:
         run: |
           echo "Esperando a que el bucket $BUCKET_NAME exista..."
           aws s3api wait bucket-exists --bucket $BUCKET_NAME
+      
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt -t package/
+          cp app/lambda_handlers/kinesis_to_dynamo.py package/
 
       - name: Package Lambda Code
         run: |
-          zip -r function.zip app/ requirements.txt
+          zip -r kinesis_dynamo_${{ github.sha }}.zip package/
+
+      - name: Validate package contents
+        run: |
+          unzip -l kinesis_dynamo_${{ github.sha }}.zip
 
       - name: Upload Lambda Package to S3
         run: |
-          aws s3 cp function.zip s3://$BUCKET_NAME/function.zip
+          aws s3 cp kinesis_dynamo_${{ github.sha }}.zip s3://$BUCKET_NAME/kinesis_dynamo_${{ github.sha }}.zip
 
       - name: Handle real-time-stack ROLLBACK_COMPLETE
         run: |
