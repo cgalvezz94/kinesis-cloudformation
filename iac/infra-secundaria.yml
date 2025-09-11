@@ -61,19 +61,19 @@ Resources:
       EventSourceArn: !GetAtt DataStream.Arn
       FunctionName: !Ref StreamProcessorLambda
       StartingPosition: LATEST
-
+  
   ### 🔹 Timestream Database
-  BinanceTradesDB:
-    Type: AWS::Timestream::Database
-    Properties:
-      DatabaseName: !Sub "${Project}-trades-db"
+  # BinanceTradesDB:
+  #  Type: AWS::Timestream::Database
+  #  Properties:
+  #    DatabaseName: !Sub "${Project}-trades-db"
 
   ### 🔹 Timestream Table
-  BinanceTradesTimestreamTable:
-    Type: AWS::Timestream::Table
-    Properties:
-      DatabaseName: !Ref BinanceTradesDB
-      TableName: trades
+  #BinanceTradesTimestreamTable:
+  #  Type: AWS::Timestream::Table
+  #  Properties:
+  #    DatabaseName: !Ref BinanceTradesDB
+  #    TableName: trades
   
   ### 🔹 Grafana Workspace
   ManagedGrafanaWorkspace:
