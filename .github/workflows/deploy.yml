@@ -141,4 +141,4 @@ jobs:
           aws cloudformation deploy \
             --template-file iac/infra-secundaria.yml \
             --stack-name real-time-stack \
-            --parameter-overrides LambdaCodeS3Bucket=$BUCKET_NAME LambdaCodeS3Key=function.zip
+            --parameter-overrides LambdaCodeS3Bucket=$BUCKET_NAME LambdaCodeS3Key=kinesis_dynamo.zip
