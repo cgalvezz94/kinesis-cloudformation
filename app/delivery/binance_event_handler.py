@@ -1,6 +1,5 @@
 # app/delivery/binance_event_handler.py 
 
-
 import logging
 # from app.processing.duration_filter_tester import is_duration_valid
 from app.processing.uptime_filter_tester import is_continuous
