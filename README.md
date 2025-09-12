@@ -63,7 +63,7 @@ The solution also includes:
 ## Project Structure
 
 ```text 
-app/
+kinesis-cloudformation/
 ├──.github/ # Github Actions
 │ ├── workflows/
 │ │  ├── deploy.yml
@@ -99,8 +99,12 @@ app/
 ├── tests/ # Automated test files
 │   └── __init__.py
 │   ├── test_kinesis_publisher.py
-│   ├── test_websocket_payload_parser.py 
+│   ├── test_websocket_payload_parser.py
+├──.dockerignore
+├──.gitignore
+├──dockerfile 
 ├──README.md # This file 
+├──requirements-dev.txt # Python dependencies
 └──requirements.txt # Python dependencies
 ```
 

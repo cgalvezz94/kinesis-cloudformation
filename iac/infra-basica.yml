@@ -12,6 +12,12 @@ Resources:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: !Sub "mi-bucket-lambdas-${AWS::AccountId}"
+  
+  ### 🔹 ECS Cluster para correr el contenedor
+  BinanceCluster:
+  Type: AWS::ECS::Cluster
+  Properties:
+    ClusterName: binance-cluster
 
   ### 🔹 IAM Role para Lambda
   LambdaExecutionRole:
@@ -49,6 +55,32 @@ Resources:
         - arn:aws:iam::aws:policy/AmazonSNSFullAccess
         - arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess
 
+  BinanceTaskExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: binance-task-execution-role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+      Tags:
+        - Key: Name
+          Value: binance-task-execution-role
+  
+  BinanceLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: /ecs/binance-trades
+      RetentionInDays: 7
+      Tags:
+        - Key: Name
+          Value: binance-log-group
+
 
 Outputs:
   LambdaExecutionRoleArn:
@@ -67,4 +99,21 @@ Outputs:
     Value: !GetAtt GrafanaRole.Arn
     Export:
       Name: GrafanaRoleArn
+
+  BinanceClusterName:
+    Value: !Ref BinanceCluster
+    Export:
+      Name: BinanceClusterName
+
+  BinanceTaskExecutionRoleArn:
+    Description: ARN del role de la tarea en ECS 
+    Value: !GetAtt BinanceTaskExecutionRole.Arn
+    Export:
+      Name: BinanceTaskExecutionRoleArn
+
+  BinanceLogGroupName:
+    Description: Nombre del grupo de logs para ECS
+    Value: !Ref BinanceLogGroup
+    Export:
+      Name: BinanceLogGroupName
   

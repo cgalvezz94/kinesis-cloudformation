@@ -132,7 +132,7 @@ jobs:
       - name: Push Docker image to ECR Public
         run: docker push public.ecr.aws/l1v8h9k1/binance-trades:latest
 
-      - name: Handle real-time-stack ROLLBACK_COMPLETE
+      - name: Handle infra-redes status
         run: |
           STACK_NAME=real-time-stack
           STATUS=$(aws cloudformation describe-stacks \
@@ -153,6 +153,31 @@ jobs:
       - name: Deploy CloudFormation stack 2
         run: |
           aws cloudformation deploy \
+            --template-file iac/infra-redes.yml \
+            --stack-name infra-redes \
+
+      - name: Handle infra secundaria status
+        run: |
+          STACK_NAME=infra-secundaria
+          STATUS=$(aws cloudformation describe-stacks \
+            --stack-name $STACK_NAME \
+            --query "Stacks[0].StackStatus" \
+            --output text 2>&1 || echo "NOT_FOUND")
+
+          echo "Estado actual del stack: $STATUS"
+
+          if [[ "$STATUS" == *"ROLLBACK_COMPLETE"* || "$STATUS" == *"ROLLBACK_FAILED"* || "$STATUS" == *"UPDATE_ROLLBACK_COMPLETE"* ]]; then
+          echo "Eliminando stack $STACK_NAME en estado $STATUS ..."
+          aws cloudformation delete-stack --stack-name $STACK_NAME
+          echo "Esperando que el stack se elimine..."
+          aws cloudformation wait stack-delete-complete --stack-name $STACK_NAME
+          echo "Stack eliminado"
+          fi
+      
+      - name: Deploy CloudFormation stack 3
+        run: |
+          aws cloudformation deploy \
             --template-file iac/infra-secundaria.yml \
             --stack-name real-time-stack \
             --parameter-overrides LambdaCodeS3Bucket=$BUCKET_NAME LambdaCodeS3Key=kinesis_timestream.zip
+      
