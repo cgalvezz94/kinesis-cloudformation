@@ -27,6 +27,24 @@ Parameters:
     Type: String
     Default: 'kinesis-project'
     Description: 'The project name.'
+  VpcId:
+    Type: String
+    Default: !ImportValue BinanceVpcId
+  BinanceClusterName:
+    Type: String
+    Default: !ImportValue BinanceClusterName
+  BinancePublicSubnetId:
+    Type: String
+    Default: !ImportValue BinancePublicSubnetId
+  BinanceSecurityGroupId:
+    Type: String
+    Default: !ImportValue BinanceSecurityGroupId
+  BinanceTaskExecutionRoleArn:
+    Type: String
+    Default: !ImportValue BinanceTaskExecutionRoleArn
+  BinanceLogGroupName:
+    Type: String
+    Default: !ImportValue BinanceLogGroupName
 
 
 Resources:
@@ -85,3 +103,39 @@ Resources:
       PermissionType: SERVICE_MANAGED
       Name: !Sub "${Project}-grafana"
       RoleArn: !ImportValue GrafanaRoleArn
+
+  BinanceTaskDefinition:
+  Type: AWS::ECS::TaskDefinition
+  Properties:
+    Family: binance-task
+    Cpu: "256"
+    Memory: "512"
+    NetworkMode: awsvpc
+    RequiresCompatibilities:
+      - FARGATE
+    ExecutionRoleArn: !Ref BinanceTaskExecutionRoleArn
+    ContainerDefinitions:
+      - Name: binance-container
+        Image: public.ecr.aws/l1v8h9k1/binance-trades:latest
+        Essential: true
+        LogConfiguration:
+          LogDriver: awslogs
+          Options:
+            awslogs-group: !Ref BinanceLogGroupName
+            awslogs-region: us-east-1
+            awslogs-stream-prefix: binance
+
+  BinanceService:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref BinanceClusterName
+      LaunchType: FARGATE
+      DesiredCount: 1
+      TaskDefinition: !Ref BinanceTaskDefinition
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          Subnets:
+            - !Ref BinancePublicSubnetId
+          SecurityGroups:
+            - !Ref BinanceSecurityGroupId

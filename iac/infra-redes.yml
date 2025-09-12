@@ -1,0 +1,100 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Infraestructura de redes'
+
+Resources:
+  ### 🔹 VPC
+  BinanceVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: binance-vpc
+
+  ### 🔹 Internet Gateway
+  BinanceInternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: binance-igw
+
+  BinanceVPCGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref BinanceVPC
+      InternetGatewayId: !Ref BinanceInternetGateway
+
+  ### 🔹 Public Subnet
+  BinancePublicSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref BinanceVPC
+      CidrBlock: 10.0.1.0/24
+      MapPublicIpOnLaunch: true
+      AvailabilityZone: !Select [0, !GetAZs us-east-1]
+      Tags:
+        - Key: Name
+          Value: binance-public-subnet
+
+  ### 🔹 Route Table
+  BinanceRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref BinanceVPC
+      Tags:
+        - Key: Name
+          Value: binance-route-table
+
+  BinanceRoute:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref BinanceRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref BinanceInternetGateway
+
+  BinanceSubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref BinancePublicSubnet
+      RouteTableId: !Ref BinanceRouteTable
+
+  ### 🔹 Security Group
+  BinanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Access for ECS Fargate tasks
+      VpcId: !Ref BinanceVPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: binance-sg
+
+Outputs:
+  VpcId:
+    Description: ID de la VPC principal
+    Value: !Ref BinanceVPC
+    Export:
+      Name: BinanceVpcId
+
+  PublicSubnetId:
+    Description: Subnet pública para tareas ECS
+    Value: !Ref BinancePublicSubnet
+    Export:
+      Name: BinancePublicSubnetId
+
+  SecurityGroupId:
+    Description: SG para tareas ECS
+    Value: !Ref BinanceSecurityGroup
+    Export:
+      Name: BinanceSecurityGroupId
