@@ -105,25 +105,25 @@ Resources:
       RoleArn: !ImportValue GrafanaRoleArn
 
   BinanceTaskDefinition:
-  Type: AWS::ECS::TaskDefinition
-  Properties:
-    Family: binance-task
-    Cpu: "256"
-    Memory: "512"
-    NetworkMode: awsvpc
-    RequiresCompatibilities:
-      - FARGATE
-    ExecutionRoleArn: !Ref BinanceTaskExecutionRoleArn
-    ContainerDefinitions:
-      - Name: binance-container
-        Image: public.ecr.aws/l1v8h9k1/binance-trades:latest
-        Essential: true
-        LogConfiguration:
-          LogDriver: awslogs
-          Options:
-            awslogs-group: !Ref BinanceLogGroupName
-            awslogs-region: us-east-1
-            awslogs-stream-prefix: binance
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: binance-task
+      Cpu: "256"
+      Memory: "512"
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+        - FARGATE
+      ExecutionRoleArn: !Ref BinanceTaskExecutionRoleArn
+      ContainerDefinitions:
+        - Name: binance-container
+          Image: public.ecr.aws/l1v8h9k1/binance-trades:latest
+          Essential: true
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Ref BinanceLogGroupName
+              awslogs-region: us-east-1
+              awslogs-stream-prefix: binance
 
   BinanceService:
     Type: AWS::ECS::Service
