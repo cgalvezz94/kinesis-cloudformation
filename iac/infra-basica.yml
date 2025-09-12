@@ -15,9 +15,9 @@ Resources:
   
   ### 🔹 ECS Cluster para correr el contenedor
   BinanceCluster:
-  Type: AWS::ECS::Cluster
-  Properties:
-    ClusterName: binance-cluster
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: binance-cluster
 
   ### 🔹 IAM Role para Lambda
   LambdaExecutionRole:
