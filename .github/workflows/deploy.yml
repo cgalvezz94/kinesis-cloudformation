@@ -108,15 +108,15 @@ jobs:
 
       - name: Package Lambda Code
         run: |
-          zip -r kinesis_timestream.zip package/
+          zip -r kinesis_to_timestream.zip package/
 
       - name: Validate package contents
         run: |
-          unzip -l kinesis_timestream.zip
+          unzip -l kinesis_to_timestream.zip
 
       - name: Upload Lambda Package to S3
         run: |
-          aws s3 cp kinesis_timestream.zip s3://$BUCKET_NAME/kinesis_timestream.zip
+          aws s3 cp kinesis_to_timestream.zip s3://$BUCKET_NAME/kinesis_to_timestream.zip
 
       - name: Login to Amazon ECR Public
         run: |
@@ -150,7 +150,7 @@ jobs:
           echo "Stack eliminado"
           fi
       
-      - name: Deploy CloudFormation stack
+      - name: Deploy CloudFormation stack 2
         run: |
           aws cloudformation deploy \
             --template-file iac/infra-secundaria.yml \
