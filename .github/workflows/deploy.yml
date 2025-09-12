@@ -124,7 +124,7 @@ jobs:
           | docker login --username AWS --password-stdin public.ecr.aws
 
       - name: Build Docker image
-        run: docker build -t websocket-client-binance .
+        run: docker build -t binance-trades .
 
       - name: Tag Docker image
         run: docker tag binance-trades:latest public.ecr.aws/l1v8h9k1/binance-trades:latest
