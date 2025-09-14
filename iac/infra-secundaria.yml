@@ -14,7 +14,7 @@ Parameters:
     Description: 'The mode of the Kinesis stream.'
   RetentionPeriodHours:
     Type: Number
-    Default: 24
+    Default: "24"
     Description: 'The retention period for the Kinesis stream in hours.'
   MetricsOption:
     Type: String
@@ -27,24 +27,6 @@ Parameters:
     Type: String
     Default: 'kinesis-project'
     Description: 'The project name.'
-  VpcId:
-    Type: String
-    Default: !ImportValue BinanceVpcId
-  BinanceClusterName:
-    Type: String
-    Default: !ImportValue BinanceClusterName
-  BinancePublicSubnetId:
-    Type: String
-    Default: !ImportValue BinancePublicSubnetId
-  BinanceSecurityGroupId:
-    Type: String
-    Default: !ImportValue BinanceSecurityGroupId
-  BinanceTaskExecutionRoleArn:
-    Type: String
-    Default: !ImportValue BinanceTaskExecutionRoleArn
-  BinanceLogGroupName:
-    Type: String
-    Default: !ImportValue BinanceLogGroupName
 
 
 Resources:
@@ -113,7 +95,7 @@ Resources:
       NetworkMode: awsvpc
       RequiresCompatibilities:
         - FARGATE
-      ExecutionRoleArn: !Ref BinanceTaskExecutionRoleArn
+      ExecutionRoleArn: !ImportValue BinanceTaskExecutionRoleArn
       ContainerDefinitions:
         - Name: binance-container
           Image: public.ecr.aws/l1v8h9k1/binance-trades:latest
@@ -121,14 +103,14 @@ Resources:
           LogConfiguration:
             LogDriver: awslogs
             Options:
-              awslogs-group: !Ref BinanceLogGroupName
+              awslogs-group: !ImportValue BinanceLogGroupName
               awslogs-region: us-east-1
               awslogs-stream-prefix: binance
 
   BinanceService:
     Type: AWS::ECS::Service
     Properties:
-      Cluster: !Ref BinanceClusterName
+      Cluster: !ImportValue BinanceClusterName
       LaunchType: FARGATE
       DesiredCount: 1
       TaskDefinition: !Ref BinanceTaskDefinition
@@ -136,6 +118,6 @@ Resources:
         AwsvpcConfiguration:
           AssignPublicIp: ENABLED
           Subnets:
-            - !Ref BinancePublicSubnetId
+            - !ImportValue BinancePublicSubnetId
           SecurityGroups:
-            - !Ref BinanceSecurityGroupId
+            - !ImportValue BinanceSecurityGroupId
