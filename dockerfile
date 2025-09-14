@@ -14,4 +14,4 @@ COPY app/schemas/ ./schemas
 COPY app/sources/ ./sources
 COPY config/ ./config
 
-CMD ["python", "app/sources/binance_ws_client.py"]
+CMD ["python", "sources/binance_ws_client.py"]
