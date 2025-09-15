@@ -4,8 +4,8 @@ import asyncio
 import websockets
 import logging
 from tenacity import retry, stop_after_attempt, wait_exponential
-from app.utils.websocket_payload_parser import parse_valid_events
-from app.delivery.binance_event_handler import handle_event  # o donde tengas tu handler
+from utils.websocket_payload_parser import parse_valid_events
+from delivery.binance_event_handler import handle_event  # o donde tengas tu handler
 
 # Configuración de logging
 logger = logging.getLogger("BinanceWS")
