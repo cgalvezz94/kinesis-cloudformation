@@ -106,18 +106,3 @@ Resources:
               awslogs-group: !ImportValue BinanceLogGroupName
               awslogs-region: us-east-1
               awslogs-stream-prefix: binance
-
-  BinanceService:
-    Type: AWS::ECS::Service
-    Properties:
-      Cluster: !ImportValue BinanceClusterName
-      LaunchType: FARGATE
-      DesiredCount: 0
-      TaskDefinition: !Ref BinanceTaskDefinition
-      NetworkConfiguration:
-        AwsvpcConfiguration:
-          AssignPublicIp: ENABLED
-          Subnets:
-            - !ImportValue BinancePublicSubnetId
-          SecurityGroups:
-            - !ImportValue BinanceSecurityGroupId
