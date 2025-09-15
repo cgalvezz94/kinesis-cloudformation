@@ -112,7 +112,7 @@ Resources:
     Properties:
       Cluster: !ImportValue BinanceClusterName
       LaunchType: FARGATE
-      DesiredCount: 1
+      DesiredCount: 0
       TaskDefinition: !Ref BinanceTaskDefinition
       NetworkConfiguration:
         AwsvpcConfiguration:
