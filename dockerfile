@@ -6,12 +6,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Solo copiar lo necesario
-COPY app/delivery/ ./delivery
-COPY app/processing/ ./processing
-COPY app/producers/ ./producers
-COPY app/utils/ ./utils
-COPY app/schemas/ ./schemas
-COPY app/sources/ ./sources
+COPY app/ ./app
 COPY config/ ./config
 
 CMD ["python", "sources/binance_ws_client.py"]
