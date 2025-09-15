@@ -158,7 +158,7 @@ jobs:
 
       - name: Handle infra secundaria status
         run: |
-          STACK_NAME=infra-secundaria
+          STACK_NAME=real-time-stack
           STATUS=$(aws cloudformation describe-stacks \
             --stack-name $STACK_NAME \
             --query "Stacks[0].StackStatus" \
