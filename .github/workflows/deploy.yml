@@ -104,7 +104,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r requirements.txt -t package/
-          cp app/lambda_handlers/kinesis_to_timestream.py package/
+          cp lambda_handlers/kinesis_to_timestream.py package/
 
       - name: Package Lambda Code
         run: |
