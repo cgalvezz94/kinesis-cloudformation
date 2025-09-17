@@ -61,40 +61,22 @@ jobs:
       - name: List repo files
         run: ls -R
 
-      - name: Validate CloudFormation 1
-        run: |
-          aws cloudformation validate-template --template-body "$(cat iac/infra-basica.yml)"
+      # 🟢 Terraform despliega la infraestructura que incluye el bucket
+      - name: Terraform Init
+        working-directory: terraform/
+        run: terraform init
 
-      - name: Validate CloudFormation 2
-        run: |
-          aws cloudformation validate-template --template-body "$(cat iac/infra-secundaria.yml)"
+      - name: Terraform Validate
+        working-directory: terraform/
+        run: terraform validate
 
-      - name: Handle basic-infra ROLLBACK_COMPLETE
-        run: |
-          STACK_NAME=basic-infra
-          STATUS=$(aws cloudformation describe-stacks \
-            --stack-name $STACK_NAME \
-            --query "Stacks[0].StackStatus" \
-            --output text 2>&1 || echo "NOT_FOUND")
+      - name: Terraform Plan
+        working-directory: terraform/
+        run: terraform plan -var="bucket_name=$BUCKET_NAME" -out=tfplan
 
-          echo "Estado actual del stack: $STATUS"
-
-          if [[ "$STATUS" == *"ROLLBACK_COMPLETE"* || "$STATUS" == *"ROLLBACK_FAILED"* || "$STATUS" == *"UPDATE_ROLLBACK_COMPLETE"*  ]]; then
-          echo "Eliminando stack $STACK_NAME en estado $STATUS ..."
-          aws cloudformation delete-stack --stack-name $STACK_NAME
-          echo "Esperando que el stack se elimine..."
-          aws cloudformation wait stack-delete-complete --stack-name $STACK_NAME
-          echo "Stack eliminado"
-          fi
-
-
-      - name: Deploy CloudFormation Stack 1
-        run: |
-          aws cloudformation deploy \
-            --template-file iac/infra-basica.yml \
-            --stack-name basic-infra \
-            --capabilities CAPABILITY_NAMED_IAM \
-            --parameter-overrides BucketName=$BUCKET_NAME
+      - name: Terraform Apply
+        working-directory: terraform/
+        run: terraform apply -auto-approve tfplan
 
       - name: Wait for S3 bucket to exist
         run: |
@@ -132,52 +114,5 @@ jobs:
       - name: Push Docker image to ECR Public
         run: docker push public.ecr.aws/l1v8h9k1/binance-trades:latest
 
-      - name: Handle infra-redes status
-        run: |
-          STACK_NAME=real-time-stack
-          STATUS=$(aws cloudformation describe-stacks \
-            --stack-name $STACK_NAME \
-            --query "Stacks[0].StackStatus" \
-            --output text 2>&1 || echo "NOT_FOUND")
 
-          echo "Estado actual del stack: $STATUS"
-
-          if [[ "$STATUS" == *"ROLLBACK_COMPLETE"* || "$STATUS" == *"ROLLBACK_FAILED"* || "$STATUS" == *"UPDATE_ROLLBACK_COMPLETE"* ]]; then
-          echo "Eliminando stack $STACK_NAME en estado $STATUS ..."
-          aws cloudformation delete-stack --stack-name $STACK_NAME
-          echo "Esperando que el stack se elimine..."
-          aws cloudformation wait stack-delete-complete --stack-name $STACK_NAME
-          echo "Stack eliminado"
-          fi
-      
-      - name: Deploy CloudFormation stack 2
-        run: |
-          aws cloudformation deploy \
-            --template-file iac/infra-redes.yml \
-            --stack-name infra-redes \
-
-      - name: Handle infra secundaria status
-        run: |
-          STACK_NAME=real-time-stack
-          STATUS=$(aws cloudformation describe-stacks \
-            --stack-name $STACK_NAME \
-            --query "Stacks[0].StackStatus" \
-            --output text 2>&1 || echo "NOT_FOUND")
-
-          echo "Estado actual del stack: $STATUS"
-
-          if [[ "$STATUS" == *"ROLLBACK_COMPLETE"* || "$STATUS" == *"ROLLBACK_FAILED"* || "$STATUS" == *"UPDATE_ROLLBACK_COMPLETE"* ]]; then
-          echo "Eliminando stack $STACK_NAME en estado $STATUS ..."
-          aws cloudformation delete-stack --stack-name $STACK_NAME
-          echo "Esperando que el stack se elimine..."
-          aws cloudformation wait stack-delete-complete --stack-name $STACK_NAME
-          echo "Stack eliminado"
-          fi
-      
-      - name: Deploy CloudFormation stack 3
-        run: |
-          aws cloudformation deploy \
-            --template-file iac/infra-secundaria.yml \
-            --stack-name real-time-stack \
-            --parameter-overrides LambdaCodeS3Bucket=$BUCKET_NAME LambdaCodeS3Key=kinesis_timestream.zip
       

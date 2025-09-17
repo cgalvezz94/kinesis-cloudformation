@@ -116,4 +116,3 @@ Outputs:
     Value: !Ref BinanceLogGroup
     Export:
       Name: BinanceLogGroupName
-  
