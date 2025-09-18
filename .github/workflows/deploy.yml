@@ -63,19 +63,19 @@ jobs:
 
       # 🟢 Terraform despliega la infraestructura que incluye el bucket
       - name: Terraform Init
-        working-directory: terraform/
+        working-directory: iac/terraform/
         run: terraform init
 
       - name: Terraform Validate
-        working-directory: terraform/
+        working-directory: iac/terraform/
         run: terraform validate
 
       - name: Terraform Plan
-        working-directory: terraform/
+        working-directory: iac/terraform/
         run: terraform plan -var="bucket_name=$BUCKET_NAME" -out=tfplan
 
       - name: Terraform Apply
-        working-directory: terraform/
+        working-directory: iac/terraform/
         run: terraform apply -auto-approve tfplan
 
       - name: Wait for S3 bucket to exist
