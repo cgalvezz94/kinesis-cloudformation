@@ -61,6 +61,9 @@ jobs:
       - name: List repo files
         run: ls -R
 
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+
       # 🟢 Terraform despliega la infraestructura que incluye el bucket
       - name: Terraform Init
         working-directory: iac/terraform/
