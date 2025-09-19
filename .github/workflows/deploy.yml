@@ -73,8 +73,14 @@ jobs:
 
       - name: Get bucket name from Terraform
         working-directory: iac/terraform/
-        run: echo "BUCKET_NAME=$(terraform output -raw lambda_s3_bucket_name)" >> $GITHUB_ENV
-      
+        run: |
+          BUCKET_NAME=$(terraform output -raw lambda_s3_bucket_name)
+          echo "BUCKET_NAME=${BUCKET_NAME}" >> $GITHUB_ENV
+
+      - name: Echo bucket name
+        run: |
+          echo "Bucket name is: $BUCKET_NAME"
+
       - name: Install dependencies
         run: |
           pip install -r requirements.txt -t package/
