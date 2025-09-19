@@ -13,7 +13,7 @@ resource "aws_internet_gateway" "binance_igw" {
   }
 }
 
-resource "aws_vpc_gateway_attachment" "binance_igw_attachment" {
+resource "aws_internet_gateway_attachment" "binance_igw_attachment" {
   vpc_id             = aws_vpc.binance_vpc.id
   internet_gateway_id = aws_internet_gateway.binance_igw.id
 }
@@ -51,23 +51,22 @@ resource "aws_security_group" "binance_sg" {
   description = "Access for ECS Fargate tasks"
   vpc_id      = aws_vpc.binance_vpc.id
 
-  ingress = [
-    {
+  ingress {
       description      = "Allow HTTPS"
       from_port        = 443
       to_port          = 443
       protocol         = "tcp"
       cidr_blocks      = ["0.0.0.0/0"]
-    },
-    {
+  }
+
+  ingress {
       description      = "Allow HTTP"
       from_port        = 80
       to_port          = 80
       protocol         = "tcp"
       cidr_blocks      = ["0.0.0.0/0"]
-    }
-  ]
-
+  }
+  
   tags = {
     Name = "binance-sg"
   }
