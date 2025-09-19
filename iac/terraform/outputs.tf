@@ -12,3 +12,7 @@ output "ecs_task_definition_arn" {
   value       = module.infra-secundaria.ecs_task_definition_arn
   description = "ARN de la definición de tarea ECS"
 }
+
+output "lambda_s3_bucket_name" {
+  value = module.infra_basica.lambda_s3_bucket_name
+}

@@ -75,11 +75,15 @@ jobs:
 
       - name: Terraform Plan
         working-directory: iac/terraform/
-        run: terraform plan -var="bucket_name=$BUCKET_NAME" -out=tfplan
+        run: terraform plan -out=tfplan
 
       - name: Terraform Apply
         working-directory: iac/terraform/
         run: terraform apply -auto-approve tfplan
+
+      - name: Get bucket name from Terraform
+        working-directory: iac/terraform/
+        run: echo "BUCKET_NAME=$(terraform output -raw lambda_s3_bucket_name)" >> $GITHUB_ENV
 
       - name: Wait for S3 bucket to exist
         run: |
