@@ -14,5 +14,5 @@ output "ecs_task_definition_arn" {
 }
 
 output "lambda_s3_bucket_name" {
-  value = module.infra_basica.lambda_s3_bucket_name
+  value = module.infra-basica.lambda_s3_bucket_name
 }
