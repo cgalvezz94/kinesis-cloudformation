@@ -79,11 +79,10 @@ jobs:
         working-directory: iac/terraform/
         run: terraform output
       
-      - name: Obtener nombre limpio del bucket desde archivo
+      - name: Capturar nombre limpio del bucket
         working-directory: iac/terraform/
         run: |
-          terraform output lambda_s3_bucket_name > bucket_output.txt
-          BUCKET_NAME=$(grep -o '"[^"]\+"' bucket_output.txt | tr -d '"')
+          BUCKET_NAME=$(terraform output lambda_s3_bucket_name | head -n 1 | tr -d '"\r\n')
           echo "✅ Bucket name: $BUCKET_NAME"
           aws s3api wait bucket-exists --bucket "$BUCKET_NAME"
 
