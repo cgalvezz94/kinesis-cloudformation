@@ -74,6 +74,10 @@ jobs:
       - name: Terraform Apply (infra-basica)
         working-directory: iac/terraform/
         run: terraform apply -auto-approve tfplan-basica
+
+      - name: Validar output del bucket
+        working-directory: iac/terraform/
+        run: terraform output
       
       ### 🟡 Fase 2: Subir código Lambda a S3
       - name: Wait for S3 bucket to exist
