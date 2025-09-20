@@ -75,10 +75,11 @@ jobs:
         working-directory: iac/terraform/
         run: terraform apply -auto-approve tfplan-basica
       
+      ### 🟡 Fase 2: Subir código Lambda a S3
       - name: Wait for S3 bucket to exist
         working-directory: iac/terraform/
         run: |
-          BUCKET_NAME=$(terraform output -raw lambda_s3_bucket_name)
+          BUCKET_NAME=$(terraform output -raw lambda_s3_bucket_name | head -n 1)
           echo "Esperando a que el bucket $BUCKET_NAME exista..."
           aws s3api wait bucket-exists --bucket $BUCKET_NAME
 
