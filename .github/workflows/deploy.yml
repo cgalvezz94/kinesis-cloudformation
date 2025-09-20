@@ -74,20 +74,18 @@ jobs:
       - name: Terraform Apply (infra-basica)
         working-directory: iac/terraform/
         run: terraform apply -auto-approve tfplan-basica
-
-      - name: Get bucket name from Terraform
+      
+      - name: Wait for S3 bucket to exist
         working-directory: iac/terraform/
         run: |
           BUCKET_NAME=$(terraform output -raw lambda_s3_bucket_name)
-          echo "BUCKET_NAME=$BUCKET_NAME" >> $GITHUB_ENV
-      
-      - name: Wait for S3 bucket to exist
-        run: |
           echo "Esperando a que el bucket $BUCKET_NAME exista..."
           aws s3api wait bucket-exists --bucket $BUCKET_NAME
 
       - name: Echo bucket name
+        working-directory: iac/terraform/
         run: |
+          BUCKET_NAME=$(terraform output -raw lambda_s3_bucket_name)
           echo "Bucket name is: $BUCKET_NAME"
 
       - name: Install dependencies
@@ -104,11 +102,17 @@ jobs:
           unzip -l kinesis_to_timestream.zip
 
       - name: Upload Lambda Package to S3
+        working-directory: iac/terraform/
         run: |
+          BUCKET_NAME=$(terraform output -raw lambda_s3_bucket_name)
           aws s3 cp kinesis_to_timestream.zip s3://$BUCKET_NAME/kinesis_to_timestream.zip
 
       - name: Wait for Lambda zip to exist
-        run: aws s3api wait object-exists --bucket $BUCKET_NAME --key kinesis_to_timestream.zip
+        working-directory: iac/terraform/
+        run: |
+          BUCKET_NAME=$(terraform output -raw lambda_s3_bucket_name)
+          aws s3api wait object-exists --bucket $BUCKET_NAME --key kinesis_to_timestream.zip
+
 
       ### 🔵 Fase 3: Crear Lambda y recursos secundarios
       - name: Terraform Plan (infra-secundaria)
