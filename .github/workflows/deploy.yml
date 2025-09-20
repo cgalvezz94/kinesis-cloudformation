@@ -78,9 +78,8 @@ jobs:
       - name: Get bucket name from Terraform
         working-directory: iac/terraform/
         run: |
-          RAW_BUCKET=$(terraform output -raw lambda_s3_bucket_name)
-          CLEAN_BUCKET=$(echo "$RAW_BUCKET" | sed 's/[^a-zA-Z0-9._-]//g')
-          echo "BUCKET_NAME=$CLEAN_BUCKET" >> $GITHUB_ENV
+          BUCKET_NAME=$(terraform output -raw lambda_s3_bucket_name)
+          printf "BUCKET_NAME=%s\n" "$BUCKET_NAME" >> $GITHUB_ENV
       
       - name: Wait for S3 bucket to exist
         run: |
