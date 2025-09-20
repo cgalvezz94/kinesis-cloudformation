@@ -70,6 +70,15 @@ jobs:
       - name: Terraform Plan
         working-directory: iac/terraform/
         run: terraform plan -out=tfplan
+      
+      - name: Terraform Apply
+        working-directory: iac/terraform/
+        run: terraform apply -auto-approve tfplan
+
+      - name: Wait for S3 bucket to exist
+        run: |
+          echo "Esperando a que el bucket $BUCKET_NAME exista..."
+          aws s3api wait bucket-exists --bucket $BUCKET_NAME
 
       - name: Get bucket name from Terraform
         working-directory: iac/terraform/
@@ -98,15 +107,6 @@ jobs:
       - name: Upload Lambda Package to S3
         run: |
           aws s3 cp kinesis_to_timestream.zip s3://$BUCKET_NAME/kinesis_to_timestream.zip
-      
-      - name: Wait for S3 bucket to exist
-        run: |
-          echo "Esperando a que el bucket $BUCKET_NAME exista..."
-          aws s3api wait bucket-exists --bucket $BUCKET_NAME
-      
-      - name: Terraform Apply
-        working-directory: iac/terraform/
-        run: terraform apply -auto-approve tfplan
 
       - name: Login to Amazon ECR Public
         run: |
