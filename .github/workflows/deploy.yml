@@ -104,7 +104,6 @@ jobs:
           unzip -l kinesis_to_timestream.zip
 
       - name: Upload Lambda Package to S3
-        working-directory: iac/terraform/
         run: |
           aws s3 cp kinesis_to_timestream.zip s3://$BUCKET_NAME/kinesis_to_timestream.zip
 
