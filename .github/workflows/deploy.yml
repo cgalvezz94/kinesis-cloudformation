@@ -82,7 +82,7 @@ jobs:
       - name: Capturar nombre limpio del bucket
         working-directory: iac/terraform/
         run: |
-          BUCKET_NAME=$(terraform output lambda_s3_bucket_name | head -n 1 | tr -d '"\r\n')
+          BUCKET_NAME="mi-bucket-lambdas-binance"
           echo "✅ Bucket name: $BUCKET_NAME"
           aws s3api wait bucket-exists --bucket "$BUCKET_NAME"
 

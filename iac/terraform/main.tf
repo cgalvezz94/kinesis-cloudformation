@@ -16,6 +16,7 @@ provider "aws" {
 
 module "infra-basica" {
   source = "./modules/infra-basica"
+  bucket_name   = "mi-bucket-lambdas-binance"
 }
 
 module "infra-redes" {
