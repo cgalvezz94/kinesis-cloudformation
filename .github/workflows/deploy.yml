@@ -78,13 +78,8 @@ jobs:
       - name: Get bucket name from Terraform
         working-directory: iac/terraform/
         run: |
-          if terraform output -json | jq -e '.lambda_s3_bucket_name.value' > /dev/null; then
-            BUCKET_NAME=$(terraform output -json | jq -r '.lambda_s3_bucket_name.value')
-            echo "BUCKET_NAME=$BUCKET_NAME" >> $GITHUB_ENV
-          else
-            echo "Bucket output not available yet"
-            exit 1
-          fi
+          BUCKET_NAME=$(terraform output -raw lambda_s3_bucket_name)
+          echo "BUCKET_NAME=$BUCKET_NAME" >> $GITHUB_ENV
       
       - name: Wait for S3 bucket to exist
         run: |

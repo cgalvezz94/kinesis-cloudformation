@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "lambda_bucket" {
-  bucket = "${var.bucket_name}-${data.aws_caller_identity.current.account_id}"
+  bucket = var.bucket_name
 }
 
 resource "aws_ecs_cluster" "binance_cluster" {

@@ -1,7 +1,7 @@
 variable "bucket_name" {
   type        = string
   description = "Nombre base del bucket S3 para Lambdas"
-  default     = "mi-bucket-lambdas"
+  default     = "mi-bucket-lambdas-binance"
 }
 
 variable "managed_policy_arns_lambda_role" {
