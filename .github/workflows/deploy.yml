@@ -82,7 +82,11 @@ jobs:
       - name: Capturar nombre limpio del bucket
         working-directory: iac/terraform/
         run: |
-          BUCKET_NAME=$(terraform output lambda_s3_bucket_name | grep -o '^[^[:space:]]*')
+          BUCKET_NAME=$(terraform output -raw lambda_s3_bucket_name 2>/dev/null)
+          if [[ "$BUCKET_NAME" == *::* ]]; then
+          echo "❌ Bucket name contiene anotaciones inválidas: $BUCKET_NAME"
+          exit 1
+          fi
           echo "✅ Bucket name: $BUCKET_NAME"
           aws s3api wait bucket-exists --bucket "$BUCKET_NAME"
 
